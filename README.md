@@ -26,3 +26,6 @@ Run `supabase/carenest_supabase_v1.sql`, then `supabase/carenest_service_master_
 **Never put the Supabase service-role/secret key in the browser.**
 
 This is a pilot/MVP operational system. Before production, complete security review, backups, audit coverage, professional-service controls, payment gateway integration, notification delivery, file storage policies and end-to-end testing.
+
+## Feature upgrade v2
+Run `supabase/nityaseva_v2_features.sql` after the base schema and service master. It enables automatic NIT senior codes, subscription add-ons, family report permissions, and in-app report notifications.
