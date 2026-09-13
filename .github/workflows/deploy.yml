@@ -33,11 +33,11 @@ jobs:
 
       - name: Build Vite application
       
-- name: Build Vite application
-  env:
-    VITE_SUPABASE_URL: ${{ https://umfnkpcdrboyqpbzkriv.supabase.co }}
-    VITE_SUPABASE_ANON_KEY: ${{ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVtZm5rcGNkcmJveXFwYnprcml2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkyMDUwMzEsImV4cCI6MjEwNDc4MTAzMX0.2aZ6l1OZ0QcXXq-lCOQPZsEIJvv6VRIeq8_v8Hbxz00 }}
-  run: npm run build
+      - name: Build Vite application
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+        run: npm run build
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
