@@ -4,7 +4,7 @@ import {createClient} from '@supabase/supabase-js';
 import './styles.css';
 
 const URL=import.meta.env.VITE_SUPABASE_URL, KEY=import.meta.env.VITE_SUPABASE_ANON_KEY;
-const LOGO=`${import.meta.env.BASE_URL}lotus-white.svg`;
+const LOGO=`${import.meta.env.BASE_URL}nityaseva-logo.png?v=2`;
 const sb=URL&&KEY?createClient(URL,KEY):null;
 const roles=['super_admin','admin','care_manager','care_executive','nurse','partner','family','senior'];
 const admin=['super_admin','admin'];
