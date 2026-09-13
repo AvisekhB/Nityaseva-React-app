@@ -30,8 +30,6 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-
-      - name: Build Vite application
       
       - name: Build Vite application
         env:
