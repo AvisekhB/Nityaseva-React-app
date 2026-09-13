@@ -1,0 +1,31 @@
+
+/* Nityaseva Phase A UI additions */
+.action-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.action-row .tiny{white-space:nowrap}
+.pill-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
+.pill-tabs button{border:1px solid #d9e5db;background:#f6faf6;border-radius:999px;padding:8px 13px;cursor:pointer}
+.pill-tabs button.active{background:#1B5E3F;color:#fff;border-color:#1B5E3F}
+.360-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.timeline{display:flex;flex-direction:column;gap:0;padding:8px 4px}
+.timeline-item{display:grid;grid-template-columns:28px 1fr;gap:10px;padding:12px 0;border-bottom:1px solid #edf1ed}
+.timeline-dot{width:24px;height:24px;border-radius:50%;background:#E8F2E9;color:#1B5E3F;display:flex;align-items:center;justify-content:center;font-weight:800}
+.timeline-item b{display:block}
+.timeline-item small{display:block;color:#728176;margin-top:3px}
+.timeline-item p{margin:6px 0 0;color:#405247}
+.status-strip,.verification-box{border:1px solid #dce8df;background:#f7fbf7;border-radius:12px;padding:14px;margin-bottom:14px}
+.status-buttons{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.verification-box h3{margin-top:0}
+.settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.settings-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px}
+.settings-cards>div{border:1px solid #e1e9e2;border-radius:12px;padding:14px;background:#fbfcfb}
+.settings-cards p{margin-bottom:0;color:#66756b}
+.report-preview{background:#fff;border:1px solid #e1e7e2;border-radius:10px;padding:20px}
+.report-preview header{padding:0 0 12px;border-bottom:1px solid #e5ebe6}
+.report-preview header h2{margin:0 0 5px}
+.report-preview section{padding:12px 0;border-bottom:1px solid #eef2ef}
+.report-preview section h3{margin:0 0 5px}
+.report-preview section p{margin:0}
+@media(max-width:800px){
+  .360-grid,.settings-grid,.settings-cards{grid-template-columns:1fr}
+  .action-row{max-width:220px}
+}
