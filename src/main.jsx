@@ -21,13 +21,25 @@ function App(){
  async function q(table,select='*',limit=500){const {data,error}=await sb.from(table).select(select).limit(limit);if(error){console.warn(table,error.message);return []}return data||[]}
  async function loadAll(){const [s,f,st,p,v,c,r,h,i,e,sub,pay,svc,n,rep,pr,ad,asmt,cp,sd,esc,inv,fb,co,np,os]=await Promise.all([q('seniors'),q('family_members'),q('staff_assignments'),q('service_plans'),q('visits'),q('visit_checklists'),q('service_requests'),q('health_readings'),q('incidents'),q('emergency_events'),q('subscriptions'),q('payments'),q('services'),q('notifications'),q('family_reports'),q('profiles'),q('subscription_addons'),q('senior_assessments'),q('care_plans'),q('staff_details'),q('escalation_events'),q('invoices'),q('customer_feedback'),q('customer_complaints'),q('notification_preferences'),q('organization_settings', '*', 1)]);setD(x=>({...x,seniors:s,families:f,staff:st,plans:p,visits:v,checklists:c,requests:r,health:h,incidents:i,emergency:e,subscriptions:sub,payments:pay,services:svc,notifications:n,reports:rep,profiles:pr,addons:ad,addonServices:svc.filter(x=>x.pricing_type==='addon'),assessments:asmt,carePlans:cp,staffDetails:sd,escalations:esc,invoices:inv,feedback:fb,complaints:co,notificationPreferences:np,settings:os?.[0]||x.settings}))}
  function notify(x){setToast(x);setTimeout(()=>setToast(''),3500)}
- async function loginUser(e){e.preventDefault();const {error}=await sb.auth.signInWithPassword(login);if(error)notify(error.message)}
+ async function loginUser(e){
+  e.preventDefault();
+  if(!sb){notify('Supabase is not configured.');return}
+  const identifier=(login.identifier||'').trim();
+  let email=identifier;
+  if(identifier.toUpperCase().startsWith('NIT-EMP-')){
+    const {data, error}=await sb.rpc('staff_login_email',{p_employee_code:identifier.toUpperCase()});
+    if(error||!data){notify(error?.message||'Employee Code not found.');return}
+    email=data;
+  }
+  const {error}=await sb.auth.signInWithPassword({email,password:login.password});
+  if(error)notify(error.message)
+}
  async function logout(){if(sb)await sb.auth.signOut();else setProfile(null)}
  if(loading)return <div className="center">Loading Nityaseva…</div>;
  if(!profile)return <Login login={login} setLogin={setLogin} onSubmit={loginUser} demo={demo} enter={()=>setProfile(demoData.profile)}/>;
  return <div className="app"><aside><div className="brand"><div className="logo"><img src={LOGO}/></div><div><b>Nityaseva</b><small>Eternal service, Timeless care.</small></div></div><div className="userbox"><b>{profile.full_name||profile.email||'User'}</b><span>{profile.role}</span></div><nav>{nav(profile.role).map(n=><button className={page===n?'active':''} onClick={()=>setPage(n)} key={n}><span>{icon[n]||'•'}</span>{n}</button>)}</nav><button className="logout" onClick={logout}>↪ Sign out</button></aside><main><header><div><h1>{page}</h1><p>{desc(page)}</p></div><div className="header-actions"><span className={demo?'demo':'live'}>● {demo?'DEMO MODE':'LIVE SUPABASE'}</span></div></header>{toast&&<div className="toast">{toast}</div>}<Page page={page} role={profile.role} d={d} refresh={loadAll} notify={notify}/></main></div>
 }
-function Login({login,setLogin,onSubmit,demo,enter}){return <div className="login"><div className="login-card"><div className="brand big"><div className="logo"><img src={LOGO}/></div><div><b>Nityaseva</b><small>Eternal service, Timeless care.</small></div></div><h1>Welcome back</h1><p>Trusted local care for seniors and their families.</p>{demo?<><div className="notice">Supabase is not configured. Demo mode is available.</div><button className="primary full" onClick={enter}>Enter demo dashboard</button></>:<form onSubmit={onSubmit}><label>Email<input type="email" required value={login.email} onChange={e=>setLogin({...login,email:e.target.value})}/></label><label>Password<input type="password" required value={login.password} onChange={e=>setLogin({...login,password:e.target.value})}/></label><button className="primary full">Sign in</button></form>}<small className="muted">Browser uses only the Supabase anon/publishable key. Never expose service-role secrets.</small></div></div>}
+function Login({login,setLogin,onSubmit,demo,enter}){return <div className="login"><div className="login-card"><div className="brand big"><div className="logo"><img src={LOGO}/></div><div><b>Nityaseva</b><small>Eternal service, Timeless care.</small></div></div><h1>Welcome back</h1><p>Trusted local care for seniors and their families.</p>{demo?<><div className="notice">Supabase is not configured. Demo mode is available.</div><button className="primary full" onClick={enter}>Enter demo dashboard</button></>:<form onSubmit={onSubmit}><label>Email / Employee Code<input required autoComplete="username" value={login.identifier||''} placeholder="name@example.com or NIT-EMP-20260914-0002" onChange={e=>setLogin({...login,identifier:e.target.value})}/></label><label>Password<input type="password" required autoComplete="current-password" value={login.password} onChange={e=>setLogin({...login,password:e.target.value})}/></label><button className="primary full">Sign in</button><small className="muted">Staff can sign in using their Employee Code. Other users can use their email.</small></form>}<small className="muted">Browser uses only the Supabase anon/publishable key. Never expose service-role secrets.</small></div></div>}
 function Page({page,role,d,refresh,notify}){
  const props={d,refresh,notify,role};
  if(page==='Home' && role==='family')return <FamilyHome {...props}/>;
